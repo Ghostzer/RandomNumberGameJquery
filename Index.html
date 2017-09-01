@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+              crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <title>Random Numbers Game</title>
+</head>
+
+<body>
+
+    <div class="title"><h1>Random Numbers Game</h1></div>
+
+    <div class="container">
+        <div class="vie"></div>
+        <button id="btn_new">New game</button><br>
+        <input type="number" id="nombre">
+        <div class="historique"></div>
+    </div>
+
+
+    <script type="text/javascript">
+
+        $("#btn_new").hide();
+
+        var nombreATrouver = 1 + Math.floor(Math.random() * 100);
+        var nombreUtilisateur = $('input#nombre').val();
+        var vie = 5;
+
+        for (var i = 0; i < vie; i++) {
+        $('.vie').prepend('<img id="heart" src="assets/images/heart.png" />')
+        }
+
+
+        $("#nombre").focus();
+
+
+        $(document).ready(function() {
+
+            $( ".historique" ).prepend( "<span class='histo'>Find number between 1 and 100.</span>" );
+
+
+            $("#btn_ok").click(function() {
+                check(nombreUtilisateur, nombreATrouver);
+            });
+
+
+
+            $('#nombre').on('keypress', function (e) {
+                 if(e.which === 13){
+                    check(nombreUtilisateur, nombreATrouver);  
+                 }
+            });
+
+            $('#btn_new').click(function() {
+                location.reload();
+            });
+
+
+
+        }); // ready
+
+function check(nombreUtilisateur, nombreATrouver) {
+
+    var nombreUtilisateur = $('input#nombre').val();
+
+
+
+                if (nombreUtilisateur < 0 || nombreUtilisateur > 100) {
+                    $( ".historique" ).prepend( "<span class='histo'>" + nombreUtilisateur + " : Please make sure the number is between 1 and 100. </span><br>" );
+                    $("#nombre").val("");
+                } else {   
+
+
+                        if (nombreUtilisateur > nombreATrouver) {
+
+                            $( ".historique" ).prepend( "<span class='histo'>" + nombreUtilisateur + " is too big.</span><br>" );
+                            $("#nombre").val("");
+                            $("#nombre").focus();
+                            lostLive();
+                            checkLive(vie);
+                            
+                        } 
+                        if (nombreUtilisateur < nombreATrouver) {
+
+                            $( ".historique" ).prepend( "<span class='histo'>" + nombreUtilisateur + " is too small.</span><br>" );
+                            $("#nombre").val("");
+                            $("#nombre").focus();
+                            lostLive();
+                            checkLive(vie);
+                        } 
+                        if (nombreUtilisateur == nombreATrouver) {
+                            $( ".historique" ).prepend( "<span class='histo'>You win ! You still have " + vie + " life(s).</span><br>"  );
+                            $("#nombre").val("");
+                            $('input#nombre').attr('disabled', 'true');
+                            $('#btn_ok').attr('disabled', 'true');
+                            $("#nombre").val("");
+                            $("#btn_new").show();
+                        }
+                    
+
+                } // loop check 0-100
+
+} // function check
+
+
+
+function lostLive() {
+    $('.vie img').last().fadeOut('fast', function() {
+        $('.vie img').last().remove();
+    });
+    vie--;
+}
+
+
+
+
+function checkLive(vie) {
+    if (vie == 0) {
+        $( ".historique" ).prepend( "<span class='histo'>Oh no ! You lost... The number was " + nombreATrouver + ".</span><br>" );
+        $('input#nombre').attr('disabled', 'true');
+        $('#btn_ok').attr('disabled', 'true');
+        $('#btn_ok').css('background-color', '#eee');
+        $("#nombre").val("");
+        $("#nombre").css('background-color', '#eee');
+        $("#btn_new").show();
+    }
+}
+
+
+    </script>
+</body>
+
+</html>
+
